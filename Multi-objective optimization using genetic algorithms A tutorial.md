@@ -190,7 +190,7 @@ nc(x,t)=\Sigma_{y\in P,r(y,t)=r(x,t)}max\{\frac{\sigma_{share-dz(x,y)}}{\sigma_{
 $$
 其中 $\sigma_{share}$ 是利基规模。
 
-Step 3：计算niche count后，对每个解的适应度进行如下调整：
+Step 3：计算 niche count后，对每个解的适应度进行如下调整：
 $$
 f'(x,t)=\frac{f(x,t)}{nc(x,t)}
 $$
