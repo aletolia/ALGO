@@ -119,11 +119,11 @@ a_i(k)=\Sigma_la_l(k-1)·P_{li}(k-1,k),k=1,2,...,
 $$
 其中总和涵盖所有可能的结果。 在下文中，$X(k)$ 表示第 $k$ 次试验的结果。因此：
 
-<img src="C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20210820005308021.png" alt="image-20210820005308021" style="zoom:67%;" />
+<img src="C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20210820005308021.png" alt="image-20210820005308021" style="zoom: 50%;" />
 
 以及
 
-<img src="C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20210820005332259.png" alt="image-20210820005332259" style="zoom:67%;" />
+<img src="C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20210820005332259.png" alt="image-20210820005332259" style="zoom: 50%;" />
 
 如果条件概率不依赖于$k$，则对应的马尔可夫链称为齐次，否则称为非齐次。
 
@@ -131,7 +131,7 @@ $$
 
 转变概率取决于控制参数 $c$ 的值，它是物理退火过程中温度的类似物。 因此，如果 $c$ 保持不变，则相应的马尔可夫链是齐次的，其转移矩阵 $P = p( c)$ 可以定义为： 
 
-<img src="C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20210820005614318.png" alt="image-20210820005614318" style="zoom:67%;" />
+<img src="C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20210820005614318.png" alt="image-20210820005614318" style="zoom: 50%;" />
 
 即每个转移概率被定义为以下两个条件概率的乘积：从配置 $i$​​​​​​ 生成配置 $j$​​​​​​ 的生成概率 $G_{ij}(c)$​​​​，以及一旦从配置 $i$​​​​ 生成后接受配置 $j$​​​​ 的接受概率 $A_{ij} (c)$​​​ 一世。 相应的矩阵 $G(c)$​​ 和 $A(c)$​ 分别称为生成矩阵和接受矩阵。 作为等式2.7中定义的结果。$P(c)$为随机矩阵，即 $\forall i:\Sigma_jP_{ij}=1$。
 
@@ -143,23 +143,279 @@ $$
 
 • 非齐次算法：该算法由单个非齐次马尔可夫链描述。  $c$ 的值在后续转换之间减小。如果在（可能很大）数量的转换之后，例如 $K$，如若以下关系成立，则模拟退火算获得全局最小值：
 
-<img src="C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20210820010216205.png" alt="image-20210820010216205" style="zoom:67%;" />
+<img src="C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20210820010216205.png" alt="image-20210820010216205" style="zoom: 50%;" />
 
 其中 $\mathcal{R}_{opt}$ 是全局最小配置的集合。 在下一章中，将证明对于齐次算法 eq2.8 渐近成立（即 $lim_{K\rightarrow\infin} Pr\{X(K) \in \mathcal{R}_{opt} \} = 1$），如果
 
 1. 每个单独的马尔可夫链都是无限长的；
 2. 满足矩阵 $A(c_l)$ 和 $G(c_l)$​ 的一定条件；
-3. <img src="C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20210820010519390.png" alt="image-20210820010519390" style="zoom:67%;" />
+3. <img src="C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20210820010519390.png" alt="image-20210820010519390" style="zoom: 50%;" />
 
    其中 $c_l$ 是第 $l$ 条马尔可夫链的控制参数值。对于非齐次算法，等式2.8 渐近成立，如果
 
 1.满足矩阵 $A(c_k)$​ 和 $ G(c_k)$​上的某些条件
 
-2.<img src="C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20210820010700749.png" alt="image-20210820010700749" style="zoom:67%;" />
+2.<img src="C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20210820010700749.png" alt="image-20210820010700749" style="zoom: 50%;" />
 
 3.在矩阵 $A(c_k)$ 上的某些附加条件下，序列 $\{C_k\}$ 的收敛速度不快于$\mathcal{O}(|\log k|^{-1})$。
 
 这两个收敛结果在第 3 章中进行了广泛的讨论。
+
+##### 附注
+
+1.条件概率分布（摘自wiki）
+
+**条件概率分布**（**Conditional Probability Distribution**，或者 **条件分布**，**Conditional Distribution** ）是现代概率论中的概念。已知两个相关的随机变量 $X$ 和$Y$，随机变量 $Y$ 在条件$\{X =x\}$​下的条件概率分布是指当已知X 的取值为某个特定值 $x$ 之时，$Y$ 的概率分布。 如果Y 在条件 $\{X =x\}$ 下的条件概率分布是连续分布，那么其密度函数称作 $Y$ 在条件 $\{X =x\}$ 下的**条件概率密度函数（条件分布密度、条件密度函数）**。与条件分布有关的概念，常常以“条件”作为前缀，如条件期望、条件方差等等。
+
+举例而言，假设在桌子上抛掷一枚普通的骰子，则其点数结果的概率分布是集合 $\{1,2,3,4,5,6\}$ 的均匀分布：每个点数出现的概率都是均等的六分之一。然而，如果据某个坐在桌边的人观察，向着他的侧面是6点，那么，在此条件下，向上的一面不可能是6点，也不可能是6点对面的1点。因此，在此条件下，抛骰子的点数结果是集合 $\{2,3,4,5\}$ 的均匀分布：有四分之一的可能性出现 $2,3,4,5$ 四种点数中的一种。可以看出，增加的条件或信息量（某个侧面是6点)导致了点数结果的概率分布的变化。这个新的概率分布就是条件概率分布。
+
+**数学定义**
+
+**离散条件分布**
+
+对于离散型的随机变量 $X$ 和 $Y$（取值范围分别是 $\mathcal{I}$ 和 $\mathcal{J}$ )，随机变量 $Y$ 在条件$\{X =x\}$ 下的条件概率分布是
+
+$$
+\forall j\in\mathcal{J},p_{Y|X}(j)=p_Y(j|X=i)=P(Y=j|X=i)=\frac{P(X=i,Y=j)}{P(X=i)}(P(X=i)>0)
+$$
+即，任取一个在 $\mathcal{J}$​ 中的变量 $j$​ ，该事件发生的概率大小取决于随即变量 $X$​ 的取值为多少（因此会形成概率密度函数，即自变量是变量 $X$​ 的取值，因变量是事件 $Y=j$​ 在该取值下的发生概率），并且对于每一个变量 $j$​ 都会有一个对应的概率密度函数，反过来也是如此。
+
+上式中，$P(X=i,Y=j)$ 是 $X$ 和 $Y$ 的联合分布概率，即 $X=i,Y=j$ 同时发生的概率，其值可以简记为 $P_{ij}$
+
+**边际分布**：指的是对于两个相关联的变量，在给定其中一个变量的情况下的条件概率分布，例如，给定
+$$
+P(x,y)
+$$
+其中变量 $x$ 与 $y$ 相关联，那么 $x$ 的边际分布即为
+$$
+P(x)=\Sigma_yP(x,y)=\Sigma_yP(x|y)P(y)
+$$
+在上面我们描述的条件概率分布中，变量 $X$ 的边际分布为
+$$
+P(X=i)=p_{i.}=\Sigma_{j\in\mathcal{J}}p_{ij}
+$$
+因此，随机变量 $Y$ 在条件 $\{X=x\}$ 下的条件概率分布也可表示为
+$$
+p_{Y|X}(i)=\frac{p_{ij}}{p_{i.}}(p_{i.}>0)
+$$
+**连续条件分布**
+
+主要问题在于，在连续分布的情况下，有 $P(X=i)=P(Y=j)=0$ ，因此要额外计算其联合密度函数 $f(x,y)$ 及其边际密度函数 $f_X(x)$ 和 $f_Y(y)$​，其余同上
+
+##### 附注2
+
+对于马尔科夫链中一些概念的描述
+
+**马尔可夫性质**
+
+过去所发生的事件不会影响将来所发生的事件，如果我们将 $A,B,C$ 分别记作过去，现在，和未来，那么我们用数学语言可以这样描述上面三种状态
+$$
+A=\{S(n_0)=i_0,...,S(n_{k-1})=i_{k-1}\}
+$$
+
+$$
+B=\{S(n_k)=i\}
+$$
+
+$$
+C=\{S(n_{k+1})=j\}
+$$
+
+如果这些变量是离散的，并且满足下面的性质，那么称其具有马尔可夫性质
+$$
+P(C|AB)=P(C|B)
+$$
+马尔可夫链是满足马尔可夫性质的随机变量序列 $X_1, X_2, X_3, ...，$即给出当前状态，**将来状态和过去状态是相互独立的**。从形式上看，
+
+如果两边的条件分布有定义，及如果 $Pr(X_1=x_1,...,X_n=x_n)>0$ ，则 $Pr(X_{n+1}=x|X_1=x_1,X_2=x_2,...,X_n=x_n)=Pr(X_{n+1}|X_n=x_n)$
+
+$X_i$ 的可能值构成的可数集 $S$​ 叫做该链的“状态空间”。
+
+- **时齐马尔可夫链**（或**静态马尔可夫链**）是对于所有 $n$
+
+$$
+Pr(X_{n=1}=x|X_n=y)=Pr(X_n=x|X_{n-1=y})
+$$
+
+的过程，即无论 $n$ 如何变化，条件概率都不会改变，转移概率与 $n$ 无关
+
+- **m 阶马尔可夫链**（或记忆为 *m* 的马尔可夫链），其中 *m* 有限，为满足
+
+$$
+\begin{equation}\begin{aligned} Pr(X_n=x_n|X_{n-1},X_{n-2}=x_{n-2},...,X_1=x_1)\\=Pr(X_n=x_n|X_{n-1}=x_{n-1},X_{n-2}=x_{n-2},...,X_{n-m}=x_{n-m})\end{aligned}\end{equation}
+$$
+
+换言之，其未来状态取决于其前 $m$ 个状态
+
+**有限状态空间**
+
+若状态空间是有限的，则转移概率分布可以由矩阵表示，该矩阵称为转移矩阵，记为 $\mathtt{P}$​ 其中位于 $(i,j)$ 的元素等于
+$$
+p_{ij}=Pr(X_{n+1}=j|X_n=i)
+$$
+即，当第 $n$ 次事件为 $i$ 时，第 $i+1$ 次事件为 $j$ 的概率
+
+该概率即为转移概率，以抛掷硬币为例，无论此前抛掷过几次硬币，硬币的正反情况如何，下一次抛掷时正面与反面的概率均是 $1/2$ ，这一连串变量即为时间齐次马尔可夫链，我们还可以进一步拓展马尔可夫链的内涵，我们将次数变化（指从 $n$ 变为 $n+1$ ）这一条件，改换成系统的条件变化，以适应现实世界中复杂的环境，因此我们重新定义转移概率的概念，转移概率为马尔可夫链在条件 $m$ 下状态为 $i$ ，变化为条件 $n$​ 时，状态变化为 $j$ 的概率
+$$
+P(X(n)=j|X(m)=j)=P_{ij}(m,n)
+$$
+对于时间齐次马尔可夫链，由于系统的条件改变都不会影响其状态变化的概率，其一步转移概率（即运行一次）可简记为 $P_{ij}$
+
+以飞行棋为例，一人4架飞机，只有骰子得到6飞机才能出发，为了简化计算，我们不考虑其他规则，只要得到6就算出发。
+
+用 $S(t)$​ 表示第 $t$ 回合已经出发的飞机数量，则这是一个时间齐次的马尔可夫链。
+
+且状态空间有限，只有$0，1，2，3，4$五种，这实际上也是一个一维随机游动。
+
+我们可以将转移概率写成矩阵，用第 $i$​​​ 行第 $j$​​ 列元素，表示从状态 $i$​ 到状态 $j$ 的一步转移概率：
+
+ ![[公式]](https://www.zhihu.com/equation?tex=P%3D%28p_%7Bij%7D%29%3D%5Cpmatrix%7B5%2F6%261%2F6%260%260%260%5C%5C+0%265%2F6%261%2F6%260%260%5C%5C+0%260%265%2F6%261%2F6%260%5C%5C+0%260%260%265%2F6%261%2F6%5C%5C+0%260%260%260%261%5C%5C+%7D+)
+
+我们把当前状态写成向量形式：
+
+ ![[公式]](https://www.zhihu.com/equation?tex=p_0%3D%281%2C0%2C0%2C0%2C0%29+) 
+
+即在初始状态，我们没有飞机出发。
+
+那么在第一回合后，直接进行矩阵乘法：
+
+ ![[公式]](https://www.zhihu.com/equation?tex=p_1+%3Dp_0+P+%3D%285%2F6%2C+1%2F6%2C+0%2C0%2C0%29+) 
+
+即5/6概率还是没有飞机出发，1/6概率有一架飞机出发。
+
+那么第二回合后，依旧可以直接进行矩阵乘法：
+
+ ![[公式]](https://www.zhihu.com/equation?tex=p_2%3Dp_1P%3D%2825%2F36%2C+10%2F36%2C1%2F36%2C0%2C0+%29+) 
+
+所以第二回合后，有一架飞机出发的概率是5/18。
+
+另外我们可以发现，到达4架飞机全部起飞的状态后，接下去就不会有变化了，以概率1停留，这被称为吸收态。
+
+**一维随机游动**
+
+接下来我们讨论几个一维随机游动的经典问题。
+
+AB两人扔硬币，如果是正面，A从B手里赢得1元，反之输掉1元，初始A有1元，B有2元，任何一人到0元时失败，问最后A获胜的概率。
+
+我们用S(t)表示t回合后A的金钱数量，写出状态转移矩阵：
+
+ ![[公式]](https://www.zhihu.com/equation?tex=P%3D%5Cpmatrix%7B1%260%260%260%5C%5C+1%2F2%260%261%2F2%260%5C%5C+0%261%2F2%260%261%2F2%5C%5C+0%260%260%261+%7D+) 
+
+把0元，即失败，和3元，即获胜，标记为吸收态，表示游戏不再变化。
+
+此处解释一下上面的转移矩阵，该状态空间是一维的，包含有 $0，1，2，3$ ，因此第 0 行（在矩阵中实际应该叫第 1 行）即表示在 A 有 0 元时，他在下一回合中金钱数量变为 $0，1，2，3$ 的概率，而由于在起始状态时，A 的金钱数量已经为 0 （对于这一行而言），因此除了第一列为 1 以外其他列全为 0，同理其他行中的元素，而由于A在一开始实际有 1 块钱，因此起始向量即为 $(0,1,0,0)$ ，我们要问 A 获胜的概率，即计算
+$$
+\lim_{n\rightarrow\infin}p_n=\lim_{n\rightarrow\infin}p_0P^n
+$$
+计算得：
+
+![[公式]](https://www.zhihu.com/equation?tex=P%5E2%3D%5Cpmatrix%7B1%260%260%260%5C%5C+1%2F2%261%2F4%260%261%2F4%5C%5C+1%2F4%260%261%2F4%261%2F2%5C%5C+0%260%260%261+%7D++)
+
+![[公式]](https://www.zhihu.com/equation?tex=P%5E3%3D%5Cpmatrix%7B1%260%260%260%5C%5C+5%2F8%260%261%2F8%261%2F4%5C%5C+1%2F4%261%2F8%260%265%2F8%5C%5C+0%260%260%261+%7D++)
+
+![[公式]](https://www.zhihu.com/equation?tex=%5Clim_%7Bn%5Cto+%5Cinfty%7DP%5En%3D%5Cpmatrix%7B1%260%260%260%5C%5C+2%2F3%260%260%261%2F3%5C%5C+1%2F3%260%260%262%2F3%5C%5C+0%260%260%261+%7D++)
+
+最后A从初始状态1元开始，抵达3元，即获胜的概率为1/3。
+
+这里也可以选择另一种更简单方法来求解。
+
+用 $P(i) $ 表示状态 $i$ 最后的获胜概率，则根据转移矩阵：
+
+ ![[公式]](https://www.zhihu.com/equation?tex=%5Cbegin%7Baligned%7D+P%280%29%26%3D0%5C%5C+P%281%29%26%3D%5Cfrac%7B1%7D%7B2%7DP%280%29%2B%5Cfrac%7B1%7D%7B2%7DP%282%29+%5C%5C+P%282%29%26%3D%5Cfrac%7B1%7D%7B2%7DP%281%29%2B%5Cfrac%7B1%7D%7B2%7DP%283%29%5C%5C+P%283%29%26%3D1++%5Cend%7Baligned%7D+)
+
+解方程组可得，P(1)=1/3，即从初始1元出发，A最后获胜概率为1/3。
+
+**马尔可夫型决策**
+
+让我们直接从一个决策例子出发。
+
+某台机器有两种状态，正常或者故障，机器正常工作一小时能提供收益为10。
+
+正常工作的机器经过一小时后，有0.1的概率出现故障。
+
+工人每隔一小时对机器进行检修，如果机器发生故障，那么就进行修理。
+
+有两种修理方式，一种是加急检修，一小时内修复概率为0.9，费用为9。另一种是常规检修，一小时内修复概率只有0.6，但费用只有4。
+
+需要决策的是，当机器出现故障，应该使用加急检修还是常规检修？
+
+对于这两种检修方法下机器的工作状态X(t)，我们能得到两个马尔可夫链，转移矩阵为：
+
+ ![[公式]](https://www.zhihu.com/equation?tex=P_1+%3D%5Cpmatrix%7B0.9%260.1%5C%5C+0.9%260.1+%7D+)
+
+ ![[公式]](https://www.zhihu.com/equation?tex=P_2+%3D%5Cpmatrix%7B0.9%260.1%5C%5C+0.6%260.4+%7D+)
+
+这里解释一下上面两个矩阵，机器有两个状态：没坏和坏了，第一行对应的是没坏的状态，从没坏的状态变成没坏的状态，概率是0.9，反之则是0.1，因此第一行对应0.9和0.1；而对于坏了的情况，由于采用的是第一种检修方法，修好的概率是0.9，修不好的概率是0.1，因此对应第二行中的0.9和0.1，对于第二个矩阵也是如此。
+
+我们假设初始机器正常工作，则时间t的机器状态X(t)分布为：
+
+![[公式]](https://www.zhihu.com/equation?tex=p_t%3Dp_0P%5Et+%3D%281%2C0%29P%5Et+)
+
+如果是求短期收益，需要累加给定时间内的每小时收益，计算准确的结果，例如前两个小时的收益为：
+
+![[公式]](https://www.zhihu.com/equation?tex=Q_1+%3D+p_0+%5Cpmatrix%7B10%5C%5C-9%7D%2B+p_0+P_1%5Cpmatrix%7B10%5C%5C-9%7D%3D18.1+)
+
+ ![[公式]](https://www.zhihu.com/equation?tex=Q_2+%3D+p_0+%5Cpmatrix%7B10%5C%5C-4%7D%2B+p_0+P_2%5Cpmatrix%7B10%5C%5C-4%7D%3D18.6+)
+
+前两小时的收益是常规检修更高。
+
+把所乘的收益向量组合起来就叫收益矩阵：
+
+![[公式]](https://www.zhihu.com/equation?tex=%5Cbegin%7Baligned%7D+%26%5Cquad+d_1%5Cquad++d_2+%5C%5C+Q%3D+%26%5Cpmatrix%7B+10%2610%5C%5C+-9%26-4+%7D++%5Cmatrix%7Bh_1%5C%5Ch_2+%7D++%5Cend%7Baligned%7D++)
+
+其中d表示方案，h表示机器状态X(t)。
+
+即机器正常工作时，两种维修方案收益都是10，故障时加急检修费用为9，常规检修费用为4。
+
+**马尔可夫型决策的长期准则**
+
+对于长期的收益计算，我们需要计算转移矩阵P的极限分布，这里直接给出结果：
+
+ ![[公式]](https://www.zhihu.com/equation?tex=%5Clim%5Climits_%7Bn%5Cto+%5Cinfty%7D+P_1%5En+%3D%5Cpmatrix%7B0.9%260.1%5C%5C+0.9%260.1+%7D+)
+
+ ![[公式]](https://www.zhihu.com/equation?tex=%5Clim%5Climits_%7Bn%5Cto+%5Cinfty%7D+P_2%5En+%3D%5Cpmatrix%7B6%2F7%261%2F7%5C%5C+6%2F7%261%2F7+%7D+)
+
+所以在足够长的时间后，X(t)的分布为：
+
+ ![[公式]](https://www.zhihu.com/equation?tex=%5Clim%5Climits_%7Bt%5Cto+%5Cinfty%7DX_1%28t%29%3D%5Clim%5Climits_%7Bt%5Cto+%5Cinfty%7Dp_0+P_1%5Et+%3D+%280.9%2C+0.1%29+)
+
+ ![[公式]](https://www.zhihu.com/equation?tex=%5Clim%5Climits_%7Bt%5Cto+%5Cinfty%7DX_2%28t%29%3D%5Clim%5Climits_%7Bt%5Cto+%5Cinfty%7Dp_0+P_2%5Et+%3D+%286%2F7%2C+1%2F7%29+)
+
+我们乘以收益可知足够长时间后的每小时收益为：
+
+ ![[公式]](https://www.zhihu.com/equation?tex=Q_1+%3D+%5Clim%5Climits_%7Bt%5Cto+%5Cinfty%7DX_1%28t%29+%5Cpmatrix%7B10%5C%5C-9+%7D%3D8.1+)
+
+ ![[公式]](https://www.zhihu.com/equation?tex=Q_2+%3D+%5Clim%5Climits_%7Bt%5Cto+%5Cinfty%7DX_2%28t%29+%5Cpmatrix%7B10%5C%5C-4+%7D%3D8+)
+
+所以长期来看，使用加急检修收益更高。
+
+但就长远来看，求解矩阵的“极限”并不现实，如果仅仅依靠特征值法进行求解，不仅计算繁杂，亦不易实现；借鉴特征值的定义，我们定义**平稳分布**的概念，该分布记为 $\pi$ ，该平稳分布具有不变性，在一部概率转移以后分布仍保持不变
+$$
+\pi=\pi P
+$$
+所以我们要求长期收益，只需要计算平稳分布乘收益矩阵就可以了。
+
+### **平稳分布的求解**
+
+现在暂时忘掉复杂的理论，假设我们已经确定，马尔可夫链的平稳分布存在且唯一。
+
+则我们可以直接将平稳分布代入，解方程：
+
+ ![[公式]](https://www.zhihu.com/equation?tex=%5Cpi+%3D+%5Cpi+P+)
+
+以机器维修的常规检修为例，有：
+
+ ![[公式]](https://www.zhihu.com/equation?tex=%28%5Cpi_1+%2C+%5Cpi_2+%29%3D%28%5Cpi_1+%2C+%5Cpi_2+%29%5Cpmatrix%7B0.9%260.1%5C%5C+0.6%260.4+%7D+)
+
+也就是方程组：
+
+ ![[公式]](https://www.zhihu.com/equation?tex=%5Cbegin%7Baligned%7D+%26+%5Cpi_1%3D0.9%5Cpi_1+%2B0.6%5Cpi_2+%5C%5C+%26+%5Cpi_2%3D0.1%5Cpi_1%2B0.4%5Cpi_2+%5C%5C+%26%5Cpi_1%2B%5Cpi_2+%3D1+++%5Cend%7Baligned%7D+)
+
+解得最后的平稳分布为(6/7,1/7)，直接和收益向量(10,-4)做内积运算，得到长期的每小时收益为8。
+
+另外有结论，平稳分布的分布概率是平均回转时的倒数，也就是说在常规检修下，平均每7小时机器会陷入下一次故障。
+
+值得注意的是，并不是所有马尔可夫链都有唯一的平稳分布，理论上只对于不可约且遍历的马尔可夫链，保证有唯一的平稳分布。
 
 ### Chapter 3 Asymptotic convergence results
 
@@ -169,203 +425,173 @@ $$
 
 齐次算法收敛证明的关键是，在某些条件下，齐次马尔可夫链的平稳分布存在。 平稳分布定义为向量 $q$，其第 $i$ 个分量由 [FELL50] 给出
 
+<img src="C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20210820124202067.png" alt="image-20210820124202067" style="zoom: 50%;" />
 
+对于任意 $j$。
 
+从等式3.1可知
+$$
+q_i=\lim_{k\rightarrow\infin}Pr\{X(k)=i\}=\lim_{k\rightarrow\infin}a(o)^TP^k
+$$
+其中 $a (0)$​​ 表示初始概率分布，即 $a (0) = (a_i (0))$​, $i \in \mathcal{R}$. 满足
 
+因此，平稳分布是无限次转换后的配置概率分布。 显然，对于模拟退火，$P$​ 取决于 $c$​，$q$​ 取决于 $c$​，即 $q = q( c)$。
 
+收敛证明现在基于以下参数（[AAR85aj, [LUN86j, [ROM85j, [ROSS86]]）。 首先，导出定义齐次马尔可夫链的矩阵 $A(c)$​ 和 $G(c)$​​ 上的条件，使得存在平稳分布 $q(c)$​。 接下来，对这些条件进行细化，以便减少 $c$​，$q(c)$ 收敛到全局最小配置集上的均匀分布，即
 
+<img src="C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20210820161414041.png" alt="image-20210820161414041" style="zoom: 50%;" />
 
+其中 $|\mathcal{R}  |$-vector $\pi$ 定义为
 
+<img src="C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20210820161507313.png" alt="image-20210820161507313" style="zoom: 50%;" />
 
+其中 $\mathcal{R}_{opt}$ 是全局最小配置集 ，结合方程3.2 和 3.4 得到
 
+<img src="C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20210820170622427.png" alt="image-20210820170622427" style="zoom:50%;" />
 
+其中 $\pi_i$ 由方程 3.5 给出。因此，收敛的证明是完整的，因为我们现在有
 
+<img src="C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20210820170704445.png" alt="image-20210820170704445" style="zoom:50%;" />
 
+在本节的其余部分，$G(c)$​​ 和 $A(c)$​ 上确保 $q(c)$ 存在的条件在 3.1.2 小节中讨论，并在 3.1.3 小节中进一步细化
 
+
 
+##### 3.1.2 Existence of the stationary distribution
 
+以下定理建立了平稳分布的存在性。
 
+定理 1 (Feller, [FELLSO 1 )
 
+如果马尔可夫链是不可约且非周期性的，则存在有限齐次马尔可夫链的平稳分布 $q$。 此外，向量 $q$ 由以下等式唯一确定：
 
+<img src="C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20210820170908101.png" alt="image-20210820170908101" style="zoom:50%;" />
 
+请注意，$q$ 是特征值为 1 的矩阵 $P$ 的左特征向量。
 
+马尔可夫链是
 
+1. 不可约，当且仅当所有配置对 $(i,j)$ 存在从 $i$ 在有限数量的转换中到达 $j$ 的正概率，即
 
+<img src="C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20210820171052931.png" alt="image-20210820171052931" style="zoom:50%;" />
 
+2. 非周期的，当且仅当对于所有配置 $i \in \mathcal{R}$​​，仅有一种方法可以从配置 $i$​ 到达配置 $i$​ ，且该配置的步数（在图上）仅有自己到自己一种，换言之，从配置 $i$​ 起到达配置 $i$ 的几条路径中，所有路径中的时间步长的最大公约数为1
 
+在模拟退火的情况下，矩阵 $P$ （即转移矩阵）由方程2.7定义。由于我们假设 $\forall i,j,c>0:A_{ij}(c)>0$​（见第 3.1.3 小节），对于这样的不可约性假设，由 $G(c)$ 诱导的马尔可夫链本身是不可约的，即 [AAR85aj  , [LUN86j, [ROM85j, [ROSS86j 
 
+<img src="C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20210820182030570.png" alt="image-20210820182030570" style="zoom:50%;" />
 
+为了建立非周期性，我们使用以下事实：如果满足以下条件，则不可约马尔可夫链是非周期性的 [ROM85j：
 
+<img src="C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20210820182046914.png" alt="image-20210820182046914" style="zoom:50%;" />
 
+因此，对于非周期性，假设 [ROM85]
 
+<img src="C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20210820182101737.png" alt="image-20210820182101737" style="zoom:50%;" />
 
+正如我们现在所拥有的，使用不等式3.14 和事实 $\forall i,j:A_{ij}\le1$
 
+<img src="C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20210820182431458.png" alt="image-20210820182431458" style="zoom:50%;" />
 
+因此
 
+<img src="C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20210820182449447.png" alt="image-20210820182449447" style="zoom:50%;" />
 
+注意，在算法的初始公式（[KIR82]，[CER85]）中，接受概率定义为
 
+<img src="C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20210820182534037.png" alt="image-20210820182534037" style="zoom:50%;" />
 
+总结我们有以下结果。 具有条件概率的齐次马尔可夫链由方程2.7给出。 如果矩阵 $A(c)$​ 和 $G(c)$ 满足方程，则 2.7 具有平稳分布。 分别为 3.12 和 3.14
 
+##### 3.1.3 Convergence of the stationary distribution
 
+我们现在对矩阵 $A(c)$ 和 $G(c)$ 施加进一步的条件，以确保 $q(c)$ 收敛到分布 $\pi$，如 eq.  3.5.Romeo 和 Sangiovanni-Vincentelli [ROM85] 推导出了一组最通用和限制最少的条件。 这些限制的限制最少，因为所有其他条件，如 Aarts 和 Van Laarhoven [AAR85a]、Anily 和 Federgrun [ANI87a]、Lundy 和 Mees [LUN86j 以及 Otten 和 Van Ginneken [OTT84j，则暗示了 Romeo 等人的条件 al.，但反过来不成立。 Romeo 和 Sangiovanni-Vincentelli [ROM85j 的推导基于这样一个事实：对于任意配置 $i \in \mathcal{R}$，平稳分布的相应分量可以写为
 
+<img src="C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20210820184828444.png" alt="image-20210820184828444" style="zoom:50%;" />
 
+其中 $\psi(\gamma, c)$ 是一个双参数函数，前提是 $\psi(\gamma, c)$ 满足以下两个条件
 
+1.$\forall i\in\mathcal{R},c>0:\psi(C(i),c)>0$
 
+2.全局平衡要求，即,$\forall j\in \mathcal{R}:$
 
+<img src="C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20210821011313643.png" alt="image-20210821011313643" style="zoom:50%;" />
 
+请注意，$q(c)$，如 eq.  3.18 确实是唯一的平稳分布，因为 $q_i(c)$​'S 满足方程3.8 和 3.9（后者可以用方程 3.20 表示）。
 
+为了确保 $\lim _{c\rightarrow0} q (c) = \pi$，函数 1/J(,,!, c) 的以下条件现在就足够了 [ROM85j
 
+### Chapter 4 The relation with statistical physics
 
+#### 4.1 Introduction
 
+正如引言（第 1 章）中所指出的，固体退火与解决大型组合优化问题之间存在明显的类比。 物理退火过程可以通过使用来自凝聚态物理的计算机模拟方法成功建模 [BAR76j, [WOOD68j. 这些方法反过来又基于统计力学理论，该理论可以被视为凝聚态物理学的中心学科 [BIN78j, [TOD83j. 从 Kirkpatrick 等人的第一篇关于模拟退火的论文开始。  [KIR82j，一些作者详细阐述了组合优化和统计力学之间的关系，或者是因为对类比的现象学兴趣（Bernasconi [BER87j, Bonomi and Lutton [BON84j, Kirkpatrick et al. [KIR82j, [KIR83j, [KIR85j] 和 Mezard 和 Parisi [MEZ85j, [MEZ86]) 或因为一个可能的框架来模拟收敛性和模拟退火算法的相应控制（Aarts 和 Van Laarhoven [AAR85aj, [AAR88aj, Grest et al.
+   [GRES86]，柯克帕特里克等人。  [KIR82]、[KIR83]、Otten 和 Van Ginneken [OTT84]、Randelman 和 Grest [RAN86] 和 White [WHI84]）。
 
+本章讨论了许多在统计力学理论中定义的用于描述处于平衡状态的物理多粒子系统的量，并将阐明这些量与求解大型组合优化问题的关系。 问题。 此外，使用这些数量作为指导，讨论了模拟退火算法的许多特征。 本章的讨论集中在全局方面，例如熵、整体平均（离散和连续）、相变以及自旋玻璃与组合优化问题之间的关系。 基于与物理学的关系的更具体的研究，例如
 
+• 基于超度量的配置空间分析（Kirkpatrick 和 Toulouse [KIR85]）， 
 
+• 副本分析（Mezard 等人 [MEZ84]、Mezard 和 Parisi [MEZ85j、[MEZ86]）和空腔法（Mezard [MEZ87]）  ]) ， 
 
+• 通过朗之万方程进行优化 (Gidas [GID85b])
 
+在本专着中没有详细讨论，感兴趣的读者可以参考有关这项工作的原始论文。  Bounds 的评论文章 [BOU86] 是那些对自旋玻璃和模拟退火之间的关系感兴趣的人的另一个很好的起点。
 
+#### 4.2 Equilibrium dynamics平衡动力学
 
+从统计物理学的基本假设开始，即物理多粒子系统的力学与统计系综兼容，并承认宏观平衡下系统力学量的时间平均值等于相应的系综平均值（ 遍历性假设）给定系统的平衡分布，可以推导出许多有用的宏观量。 正如 Gibbs [GIB02] 首先提到的，如果系综是静止的，那么它的密度是系统能量的函数。 此外，应用等概率原理[TOD83]，可以证明在热平衡时系统处于宏观状态 $i$ 的概率为 $E_i$，由玻尔兹曼分布给出
 
+<img src="C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20210821012332713.png" alt="image-20210821012332713" style="zoom:50%;" />
 
+其中 $T$​ 是系统的温度，$k_B$​ 是玻尔兹曼常数，$Z(T)$ 是分配函数，定义为
 
+<img src="C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20210821012429760.png" alt="image-20210821012429760" style="zoom:50%;" />
 
+其中求和在**所有可能的宏观状态**上运行。 统计物理学与组合问题优化之间的关系现在可以变得更加明确：给定一个处于热平衡状态的物理系统，其内部状态根据方程 4.1 给出的表达式分布;和一个组合优化问题，其配置根据方程 2.2 给出的表达式分布.（与方程 4.1 相同），平衡分布，可以以与物理系统类似的方式为优化问题定义一组宏观量。 因此可以定义以下数量：
 
+1. 均衡的预期成本
 
+<img src="C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20210821012618603.png" alt="image-20210821012618603" style="zoom:50%;" />
 
 
 
+其中 $q(c)$​ 由 eq  2.2给出
 
+2. 均衡时的预期平方成本
 
+<img src="C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20210821012709066.png" alt="image-20210821012709066" style="zoom:50%;" />
 
+3. 均衡成本的差异
 
+<img src="C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20210821012744165.png" alt="image-20210821012744165" style="zoom:50%;" />
 
+4. 平衡时的熵
 
+<img src="C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20210821012804446.png" alt="image-20210821012804446" style="zoom:50%;" />
 
+可以直接证明以下关系成立
 
+<img src="C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20210821012922632.png" alt="image-20210821012922632" style="zoom:50%;" />
 
+<img src="C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20210821012933710.png" alt="image-20210821012933710" style="zoom:50%;" />
 
+量 tc (C (c)) 在统计物理学中称为比热。 此外，将配分函数的类似物定义为（另见等式 4.2）
 
+<img src="C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20210821013003580.png" alt="image-20210821013003580" style="zoom:50%;" />
 
+可以证明
 
+<img src="C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20210821013023987.png" alt="image-20210821013023987" style="zoom:50%;" />
 
+以及
 
+<img src="C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20210821013044168.png" alt="image-20210821013044168" style="zoom:50%;" />
 
+其中 F(c) 相当于亥姆霍兹自由能 [TOD83]。
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+方程式 4.3-4.11 在统计物理学中是众所周知的，它们在平衡状态下大型物理系综的力学分析中起着重要作用。 在下文中，我们更详细地阐述了许多这些量，并讨论了对模拟退火算法的分析感兴趣的一些方面。
+   假设对应于模拟退火算法的平衡分布由方程的 q(c) 给出。  2.2 可以证明
 
 
 
