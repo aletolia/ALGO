@@ -591,197 +591,253 @@ $$
 其中 F(c) 相当于亥姆霍兹自由能 [TOD83]。
 
 方程式 4.3-4.11 在统计物理学中是众所周知的，它们在平衡状态下大型物理系综的力学分析中起着重要作用。 在下文中，我们更详细地阐述了许多这些量，并讨论了对模拟退火算法的分析感兴趣的一些方面。
-   假设对应于模拟退火算法的平衡分布由方程的 q(c) 给出。  2.2 可以证明
 
+假设对应于模拟退火算法的平衡分布由方程 $q(c)$ 给出。  2.2 可以证明
 
+<img src="C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20210821135641900.png" alt="image-20210821135641900" style="zoom:50%;" />
 
+以及
 
+<img src="C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20210821135700115.png" alt="image-20210821135700115" style="zoom:50%;" />根据 4.7 和 4.8，如果系统在控制参数的每个值处达到平衡，则在执行模拟退火算法期间，熵单调递减。最后，熵达到 $|\mathcal{R}_{opt}|$ 中的值。 在物理学中，如果假设只存在一个基态，方程4.13 减少到
 
+<img src="C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20210821140819857.png" alt="image-20210821140819857" style="zoom:50%;" />
 
+这被称为热力学第三定律 [TOD83]。熵可以解释为物理系统秩序的自然度量：高熵值对应于混乱； 较低的熵值则被认为是有序的[KIR82]、[TOD83]。在信息论中有给出类似等式4.6的有关于熵的定义，它被视为系统信息内容的定量度量。 在模拟退火或一般优化的情况下，熵可以解释为优化程度的定量度量。 如图 4.1 所示。 该图显示了通过模拟退火对 100 城市旅行商问题 (TSP)（另见第 6 章）进行优化过程演变的四种配置，其中城市位于规则方形网格的顶点上 [AAR85a  ]。 初始配置（图 4.1a）由 100 个城市的随机序列给出，远非最佳配置。 配置看起来很乱，对应的熵值很大。 在优化过程中（图 4.1b 和 4.1c），观察到的配置更接近最小值； 配置变得不那么混乱，相应的熵值减小。 最后得到一个最小值（图 4.1d），具有高度规则的模式，其熵是最小的。
 
+使用方程 4.7 和 4.8， 熵可以表示为
 
+<img src="C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20210821141046080.png" alt="image-20210821141046080" style="zoom:50%;" />
 
+对于任意选择的 $c_1 > 0$。 通常人们采用高温近似来估计 $S (c_1)$，即对于大的 $c_1$ 的 $S(c_1)$ 值，可以通过下式 [AAR85a] 来近似
 
+<img src="C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20210821141232424.png" alt="image-20210821141232424" style="zoom:50%;" />
 
+<img src="C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20210821141249059.png" alt="image-20210821141249059" style="zoom:67%;" />
 
+图 4.1：在 0、68、92 和 123 步算法后获得的 100 个城市旅行商问题的配置。 最初的游览看起来很混乱（a）（高熵）。 渐渐地，旅行变得不那么混乱，（b）和（c）（熵减少）。 最后的游览 (d) 显示了高度规则的模式（最小成本和熵）（复制自 [AAR85b]）。
 
+熵有助于估计成本函数的最小值。 在 [ETT85] 中，Ettelaie 和 Moore 展示了如何对一维 Ising 自旋玻璃使用剩余熵的概念来获得有关自旋玻璃基态的有用信息。
 
+#### 4.3 Typical behavior of the simulated annealing algorithm
 
+在模拟退火算法的情况下，上面给出的宏观量的量化可以通过近似等式4.3-4.5定义的期望来完成。使用中心极限定理和大数定律可以证明 [AAR85a] $<C(c)>$​​​ 和 $<C^2 (c)>$​​) 可以通过成本函数 $\bar{C(c)}$​ 的平均值和 成本函数 $\bar{C^2(C)}$ 的平方来估计，分别在齐次马尔可夫链的 $L_c$ 配置上以值 $c$ 采样(步长为 $c$ )，即
 
+<img src="C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20210821141828933.png" alt="image-20210821141828933" style="zoom:50%;" />
 
+以及
 
+<img src="C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20210821141845438.png" alt="image-20210821141845438" style="zoom:50%;" />
 
+其中 $X(k)$ 表示对应于马尔可夫链第 $k$ 次试验结果的配置。
 
+图 4.2 显示了 $C(c)$（图 4.2(a)）和 $\sigma(c)$（图 4.2(b)）分别依赖于模拟退火算法的控制参数 $c$ 值的典型示例。 图 4.1 中使用的旅行商问题。 根据方程计算数据点。  4.3 和 4.5 使用方程 4.17 和 4.18给出的近似值，显然，人们可以观察到
 
+<img src="C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20210821142158376.png" alt="image-20210821142158376" style="zoom:50%;" />
 
+以及
 
+<img src="C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20210821142215482.png" alt="image-20210821142215482" style="zoom:50%;" />
 
+为了模拟图 4.2 中所示的模拟退火算法的典型行为，我们简要讨论了计算预期成本 $<C(c)>$​ 和方差 $\sigma^2 (c)$ 的分析方法。 设 $\omega(C)dC$ 是定义为下式的配置密度
 
+<img src="C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20210821142342536.png" alt="image-20210821142342536" style="zoom:50%;" />
 
+然后在模拟退火算法的情况下，采用方程3.17的接受概率。给定 $c$ 值时的概率密度由下式给出
 
+<img src="C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20210821142448731.png" alt="image-20210821142448731" style="zoom:50%;" />
 
+<img src="C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20210821142504447.png" alt="image-20210821142504447" style="zoom:67%;" />
 
+图 4.2：成本函数 (a) 的归一化平均值和成本函数 (b) 的标准偏差作为 100 个城市 TSP 的控制参数 c 的函数。 虚线是根据方程4.2 9和 4.33 (a)以及等式4.30 和 4.34 (b)计算的。（转载自 [AAR88a]）。
 
+显然，$\Omega(C,c)$​ 等价于方程2.2.给出的平稳分布 $q(c)$。 预期成本 $<C(c)>$ 和方差 $σ^2 (c)$ 现在可以写为
 
+<img src="C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20210821142723702.png" alt="image-20210821142723702" style="zoom:50%;" />
 
+以及
 
+<img src="C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20210821142739161.png" alt="image-20210821142739161" style="zoom:50%;" />
 
+给定配置密度 $\omega(C)$​​​ 的解析表达式，可以计算方程4.22-4.24的积分。在大多数情况下，估计给定组合优化问题的 $\omega(C)$​​ 是非常困难的。 实际上，对于不同的问题，$\omega(C)$​ 可能会有很大的不同，尤其是对于接近 $C_{opt}$ 的 $C$ 值。 使用超度量概念分析配置空间可用于解决某些问题 [KIR85j, [SOL85j. 但是，可以对配置密度的典型（即平均）行为做出一些一般性陈述。对大型（伪）随机组合问题进行的数值实验支持了典型行为的证据，该行为可以由以下两个假设公式化（另见 [AAR88aj, [HAJ85]）：
 
+假设 1（Aarts 等人 [AAR88a]）
 
+让 $<C(\infin)>$ 和 $\sigma(\infin)$ 定义为
 
+<img src="C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20210821143733613.png" alt="image-20210821143733613" style="zoom:50%;" />
 
+以及
 
+<img src="C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20210821143748620.png" alt="image-20210821143748620" style="zoom:50%;" />
 
+然后在 $<C(\infin)>$​ 附近的几个标准偏差 $\sigma(\infin)$ 区域内，配置密度近似为高斯分布：
 
+<img src="C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20210821143846846.png" alt="image-20210821143846846" style="zoom:50%;" />
 
+因此，在该区域有
 
+<img src="C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20210821143957032.png" alt="image-20210821143957032" style="zoom:50%;" />
 
+以及
 
+<img src="C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20210821144052636.png" alt="image-20210821144052636" style="zoom:67%;" />
 
+假设 2 (Aarts et al. [AAR88a]) 在接近成本函数最小值的区域，配置密度可以近似为
 
+<img src="C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20210821144115601.png" alt="image-20210821144115601" style="zoom:50%;" />
 
+对于一些常数 $\gamma > 0$​. 如果 $\gamma < \frac1c$​ 得到
 
+<img src="C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20210821144229371.png" alt="image-20210821144229371" style="zoom:50%;" />
 
+以及
 
+<img src="C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20210821144312611.png" alt="image-20210821144312611" style="zoom:50%;" />
 
+从这些假设可以得出，在 $c$​​​​​ 值较高时，预期成本 $<C(c)>$​​​​ 与 $\frac1c$​​​​ 成正比，并且标准差 $\sigma(c)$​​​​ 是常数（图 4.2 中的 $C_>$​​​ 和 $\sigma_>$​​​），而在 $c$​​ 值较小时 $ <C(c)>$​​ 和 $\sigma(c)$​ 都与 $c$​ 成正比（图 4.2 中的 $C_<$ 和 $\sigma_<$）。
 
+显然，“典型”的含义非常模糊。 赋予该概念意义的一种可能方法是调查随机生成的大型问题。 例如，在第 6.3 节中，讨论了 Bonomi 和 Lutton 对旅行商问题和二次分配问题 [BON84]、[BON86] 的典型行为进行的研究的一些结果。
 
+#### 4.4 Phase transitions
 
+相变现象 [MORI87] 给出了退火算法研究中一个有趣的物理方面。 研究组合优化问题中相变的类比有助于研究算法的收敛性。研究相变的一种可能方法是研究系统的比热 [WOOD68]。 在图 4.3 中，给出了一个放置问题的比热（参见第 7.2.2 小节），它由方程计算。  4.7 和 4.8 并使用方程给出的近似值。  4.17 和 4.18 [KIR82]。 这个数字是由柯克帕特里克等人获得的。 他们指出，正如流体比热的最大值表示开始冻结或形成簇一样，在控制参数的两个值处发现比热最大值，每个值表示问题中不同类型的排序 . 这种测量可用作确定 $c$ 范围的方法，其中 $c$ 的较慢递减会有所帮助 [KIR82]。
 
+许多作者成功地应用复制方法 [MEZ84] 来研究组合优化问题的一般性质，包括预期的最小成本以及相变的存在和性质。 在这个范围内，我们简要讨论两篇有趣的论文。
 
+在 [FU86] 中，Fu 和 Anderson 将副本分析应用于图分区问题（参见第 6.4 节）。 为了计算预期的最终成本（Cmin ），Fu 和 Anderson 首先计算预期的亥姆霍兹自由能，然后通过取亥姆霍兹自由能的“零温度极限”（lime l 0）得到（emin）。 研究了两种模型，一种用于固定的预期度数，另一种用于与图的顶点数成线性关系的预期度数（图的度数是入射到顶点的平均边数）。 这些模型的计算结果与数值结果非常吻合。 此外，发现了相变，并且低温状态显示出具有超测量结构。
 
+在 [VANN84] 中，Vannimenus 和 Mezard 使用复制方法研究在 $n$​ 城市旅行商问题（参见第 6.3 节）中随着 $n$​ 变大，平均旅行长度随城市数量 $n$​ 的变化方式。 分析仅限于具有随机生成距离矩阵的 TSP。  Vannimenus 和 Mezard 表明存在两种不同的温度状态，其中热力学量（例如平均旅行长度）与 $n$​ 的比例不同。 在高温状态下，发现平均行程长度与 $n$​ 成比例并且不存在相变。 在低温状态下，发现了平均旅行长度的下限。 此外，在考虑 $d$​ 维随机点 TSP 的特殊情况下，对于 $d \rightarrow\infin$，平均最终旅行长度与 $n^{1-\frac1d}$ 成比例（参见 Beardwood 等人发现的界限。[BEA59]，参见方程 6.11  ）。 此外，Vannimenus 和 Mezard 发现对于这类问题实例，相变存在于低温状态。
 
+#### 4.5 Relation with spin glasses
 
+如第 2.1 节所述，物理系统的能量（由哈密顿量表示）与组合优化问题的成本函数之间存在关系。 许多作者（Fu 和 Anderson [FU86]、Carnevalli 等人 [CARN85]、Kirkpatrick 等人 [KIR82]、Vecchi 和 Kirkpatrick [VEC83]）指出，  Ising 自旋玻璃系统和几个梳状优化问题的成本函数。 作为一个说明性的例子，我们讨论与图划分问题相关的成本函数（另见第 6.4 节）。 类似类型的成本函数也可用于其他组合问题，例如路由 [VEC83j 和图像处理 [CARN85j。
 
+在图划分问题中，目标是将一个图划分为两个子图，使得两个子图的顶点数以及连接两个子图的边数差异尽可能小。 让 $a_{ij}$​ 表示两个顶点 $i$​ 和 $j$​ 之间的边数，$\mu_i$​ 是一个二值变量（$\mu_i = ±1$），表示两个子图中的顶点 $i$ 属于哪一个。然后很容易证明在两个子图之间运行的边数等于
 
+<img src="C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20210821152031703.png" alt="image-20210821152031703" style="zoom:50%;" />
 
+并且两个子图的顶点数之差等于
 
+<img src="C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20210821152057509.png" alt="image-20210821152057509" style="zoom:50%;" />
 
+将第二项平方并引入一个权重因子 $\lambda$ 可以构造如下代价函数（常数项省略）
 
+<img src="C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20210821152212850.png" alt="image-20210821152212850" style="zoom: 50%;" />
 
+该成本函数与随机磁铁或自旋玻璃的哈密顿量具有相同的形式，由下式给出
 
+<img src="C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20210821152724529.png" alt="image-20210821152724529" style="zoom:50%;" />
 
+其中自旋 $s_i$ 有两个允许的方向，即“向上”和“向下”，分别对应于 $\mu_i = 1$ 和 $\mu_i = -1$。 对于这样的系统，哈密顿量由两项组成，即具有耦合常数 $J_{ij}$ 的短程吸引（铁磁）分量； 和耦合常数为 $J_0$ 的长程排斥（反铁磁）分量。 这两个术语是有冲突的，因为它们产生了不同的基态； 没有系统配置可以同时满足这两种基态。 这种类型的系统有时被称为受挫 [TOU77]。 对于自旋玻璃，这意味着有许多能量大致相等的简并基态，并且没有明显的对称性。 自旋眼镜为具有相似类型成本函数的复杂组合优化问题提供了一个建议模型。 柯克帕特里克等人。  [KIR82] 通过对与自旋玻璃哈密顿量相关的成本函数问题的模拟退火，对优化提出以下含义：
 
+• 即使遇到挫折，也可以通过从随机选择的配置开始的迭代改进获得显着改进。
 
+• 有许多接近最优的解决方案，因此模拟退火算法找到一个的概率很大。
 
+• 所有接近最优解都非常接近最优解，因此寻找全局最小值不会有结果。
 
+多年来，人们对旋转玻璃进行了广泛的研究，强调了挫败感 [MORI87]。 进展已将注意力集中在配置空间的景观中局部最小值的分布（配置空间分析）和冷却速率依赖性。 关于第一项，关于超测量的工作特别令人感兴趣（参见例如 Kirkpatrick 和 Toulouse [KIR85]、Parisi [PAR83] 和 Mezard 等人 [MEZ84]），例如 为一些组合问题（TSP 和图分区）的配置空间的分层超度量结构提供了证据。
 
+关于第二项，Grest 等人。  [GRES86] 以及 Randelman 和 Grest [RAN86] 得出结论，某些 NP 完全自旋玻璃模型获得的基态能量与冷却速率呈对数关系； 第 3 章中介绍的渐近收敛特性在理论上证实了这一结果。 Ettelaie 和 Moore [ETT85] 从他们的残差熵分析中获得了类似的结果。
 
+最后，我们提到神经网络模型和自旋玻璃模型之间的联系是组合优化和物理学之间关系中一个有趣的方面。  Hopfield 的内容可寻址存储器模型 [HOP82] 以及 Hinton 等人介绍的 Boltzmann 机模型。  [HIN83]、[HIN84]（另见第 7.3.2 小节）本质上与 Ising 自旋模型有关； 代表神经元的自旋和突触（连接）强度的相互作用。 与神经网络模型相关的学习算法基于与自旋玻璃哈密顿量相似的成本函数的优化。 神经网络中一个生理上吸引人的方面是知识表示的层次结构，因为这提供了一种资源丰富的记忆分类和一种更自然的学习建模方法。 在这里，从对应于 Ising-spin 类系统的配置空间的分层超度量结构获得的结果可能证明是有用的。
 
+此外，最近的工作集中在组合优化问题 [HOP85]、[AAR87c] 的硬件实现上，即大规模并行决策网络的设计体现了优化问题，使得系统在“优化”（网络的自组织）后进入 一个稳定的配置对应/！ 优化问题的近似最优解。 这种决策网络可以看作是 Ising-spin 系统的硬件实现。 因此，基于从 Ising-spin 模型研究中获得的知识，探索实现这种系统的方法很诱人。
 
+### Chapter 5 Towards implementing the algorithm
 
+#### 5.1 Introduction
 
+如第 3 章所示，在以下两种情况之一中，原始公式中的模拟退火算法以概率 1 收敛到全局最小配置：
 
+1. 对于控制参数 $c_k$: 的每个值，会产生无限次转换，并且 $\lim_{k\rightarrow\infin} c_k: = 0$（齐次算法）；  
+2. 对于每个值 $c_k$​​​：生成一个转换并且 $c_k$​​ 变为零的速度不快于 $\mathcal{O}([\log k]^{-1})$​（非齐次算法）。
 
+在算法的任何实现中，渐近收敛只能是近似的。 因此，尽管该算法是渐近优化算法，但任何实现都会导致近似算法。 每个值 $c_k$​ 的转换次数：例如，必须是有限的，而 $\lim_{k\rightarrow\infin}c_k = 0$​ 只能在有限数量的 $c_k$ 值中近似。 由于这些近似，算法不再保证找到概率为 1 的全局最小值。
 
+我们注意到第 3 章的收敛结果在尝试近似渐近收敛时没有很大帮助：
 
+1. 使用 Isaacson 和 Madsen ([ISA74]) 和 Seneta ([SEN81])、Aarts 和 Van Laarhoven [AAR85a] 的结果表明，马尔可夫链长度 $L$ 上的充分条件可以确保
 
+<img src="C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20210821155706352.png" alt="image-20210821155706352" style="zoom:50%;" />
 
+对于任意小的 $\epsilon$​​ 值，其中 $a(L, c)$​ 和 $q(c)$ 是 $L$ 转换后的概率分布和齐次马尔可夫链在控制参数值 $c$ 处的平稳分布，分别由下式给出
 
+<img src="C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20210821155802528.png" alt="image-20210821155802528" style="zoom:50%;" />
 
+其中 $K$​ 与 $-\log \epsilon$​ 成正比。通常，$| \mathcal{R} |$ 是问题和方程5.2大小的指数。则意味着马尔可夫链的长度至少应该是问题规模的指数，根据第 1 章的讨论，这是非常不受欢迎的。 在 6.2 节中，非齐次算法得到了类似的结果。
 
+2. 使用第 3.2.2 和 3.2.3 小节的条件作为将控制参数的当前值 $c_k$​​ 更改为下一个 $c_{k+1}$​（$\lim_{k\rightarrow\infin}$ 的近似值)，该递推公式为
 
+<img src="C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20210821160205413.png" alt="image-20210821160205413" style="zoom:50%;" />
 
+这需要了解常数 $\Gamma$​ 的值。然而，通常很难确定这样的值（对于小问题，有时可以通过详尽的枚举来确定）。 人们求助于保守估计，例如 $\Gamma = \Delta C_{max}$​（参见等式 3.66），然而，这会导致算法的收敛速度过慢（参见 Geman 和 Geman [GEM84] 关于这一方面的评论） 和 Lundy 和 Mees [LUN86]）。
 
+当然，通过在多次转换期间保持控制参数的值恒定并注意 $c_k$ 的递减仍然不快于 $\mathcal{O}([\log k]^{-1})$，总是可以将齐次算法和非齐次算法结合起来。  Rossier 等人提出了这种方法。  ([ROSS86]) 并导致以下类型的 $c_k$ 递减规则
 
+<img src="C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20210821160917072.png" alt="image-20210821160917072" style="zoom:50%;" />
 
+对于一些常数 $c$​​ 和一些正数序列 $\{k_i \}$​, $i = 0,1,2, ....$ 注意 eqs.  5.4 和 5.5 导致一系列齐次马尔可夫链，第 $i$ 个链由 $k_i$ 转换组成。
 
+通常人们求助于模拟退火算法的实现，其中在控制参数的递减值处生成有限长度的齐次马尔可夫链序列。然后应指定以下参数： 
 
+   1.控制参数的初始值，$c_0$；  
 
+2. 控制参数的最终值，$c_f$（停止准则）；  
+3. 马尔可夫链的长度；
+4. 将控制参数的当前值 $c_k$ 更改为下一个值 $c_{k+1}$ 的规则
 
+这些参数的选择称为冷却计划。 在本章中，讨论了确定冷却计划问题的几种方法。 讨论仅限于由 eqs3.17 和 3.36 给出的接受矩阵和生成矩阵。即仅考虑原始公式中的模拟退火算法。
 
+Romeo 和 Sangiovanni-Vincentelli [ROM85j] 提出了少数考虑替代接受矩阵的论文之一，其中得出的结论是，使用不同的接受矩阵不会显着改变算法找到的解决方案的质量。
 
+许多冷却计划的构建的核心是准平衡的概念：如果 $L_k$​​​ 是第 $k$​​​ 个马尔可夫链的长度，那么退火算法被称为在 $c_k$​​​ 处的准平衡，即第 k 个值 控制参数，如果“$a(L_k,c_k)$​​接近$q(c_k)$​”。 这种接近度的精确表述是区分一个冷却计划与另一个的主要点之一。 冷却计划的实际构建通常基于以下参数。
 
+• 对于 $c_k \rightarrow\infin $​，平稳分布由配置集 $\mathcal{R}$​ 上的均匀分布给出，它直接来自于等式 3.64. 最初，因此可以通过选择 $c$​、$c_0$​ 的初始值来实现准平衡，这样实际上所有的转变都被接受。 因为在这种情况下，所有配置都以相等的概率出现，这对应于上述均匀分布，因此对应于 $q(\infin)$。
 
+• 停止标准通常基于这样的论点：如果在继续执行算法的情况下预期的成本改进很小，则可以终止算法的执行。
 
+• 第 $k$​​​​​​ 个马尔可夫链的长度 $L_k$​​​​​​ 和将 $c_k$​​​​​​ 变为 $c_{k+1}$​​​​​​ 的转换规则通过准平衡的概念密切相关。  $L_k$​​​​​ 是通过更精确地指定“$a(L_k,c_k)$​​​​ 接近 $q(c_k)$​​​”的含义来确定的。关于转换规则（通常是递减规则），很明显，$c_k$​​​ 中的大递减将使得有必要在控制参数的新值 CHi 上尝试更多转换！ 在 $c_{k+1}$​​ 恢复准平衡。因为，给定 $c_k$​​ 处的准平衡，$c_k$​​ 的减量越大，$q(c_k)$​ 和 $q(c_{k+1})$ 之间的差异就越大，并且在 $c_{k+1}$ 处建立准平衡所需的时间就越长（这个直观的论证 在第 6.4 节中进行了量化）。 因此，在 $c_k$ 的快速减少和 $L_k$ 的小值之间存在权衡。通常，人们选择 $c_k$ 中的小减量（以避免极长的链），但或者，可以使用 $L_k$ 的大值以便能够在 $c_k$ 中进行大减量
 
+在过去几年中，许多论文都讨论了寻找合适的冷却时间表，接下来的两节讨论了几种方法。 第 5.2 节专门讨论类似于 Kirkpatrick 等人提出的原始时间表的时间表。 在 [KIR82] 中。 这些概念上简单的时间表都是基于经验规则而不是基于理论的选择。 在第 5.3 节中讨论了更详细和基于理论的时间表。
 
+本章最后有一节讨论了实现算法的两种具体方法。 这些方法都与转换生成机制的改进有关，从而加快了算法的执行速度。
 
+#### 5.2 Conceptually simple cooling schedules
 
+在本节中，Kirkpatrick 等人提出的冷却计划。[KIR82] 和类似性质的时间表进行了讨论。 本讨论围绕上一节中给出的四个参数展开。
 
+- 控制参数的初始值
 
+$c$​ 的初始值是以这样一种方式确定的，即几乎所有的转换都被接受，即 $c_0$​ 是这样的 $exp( - \Delta C_{ij} / c_0) \simeq  1$​ 几乎所有的 $i $ 和 $j$。 柯克帕特里克等人提出以下经验规则：为 $c_0$ 选择一个较大的值并执行多次转换。
 
+如果接受率 $\chi$​​​（定义为接受转换的数量除以提议的转换数量）小于给定值 $\chi_0$​​（在 [KIR82] Xo = 0.8），则将 $c_0$ 的当前值加倍。继续这个过程，直到观察到的接受率超过 $\chi_0$
 
+许多作者进一步完善了该规则； 约翰逊等人。[JOHN87] 通过计算平均成本增加 $\bar{\Delta C}^{(+)}$​ 来确定 $c_0$​​​​，对于大量的随机变换，我们可以从下式中结合平均成本增加来求解 $c_0$
 
+<img src="C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20210821165237787.png" alt="image-20210821165237787" style="zoom:50%;" />
 
+等式 5.6 导致 $c_0$ ​的以下选择
 
+<img src="C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20210821165432985.png" alt="image-20210821165432985" style="zoom:50%;" />
 
+Leong 等人提出了一个类似的公式。  [LE085aj, [LE085bj, Skiscim and Golden [SKI83j, [GOLDE86j, Morgenstern and Shapiro [MORC86j, Aarts and Van Laarhoven [AAR85aj, Lundy and Mees [LUN86j and Otten and Van Ginneken] [OTT84j, 更详细的时间表（将在第 5.3 节中讨论）。
 
+- 控制参数的最终值
 
+确定控制参数最终值的停止标准要么通过固定值 $c_k$​ 的数量来确定，算法将针对该数量执行（范围从 6，由 Nahar 等人使用。[NAH85j 到 50，由 Bonomi 和 Lutton [BON84]) 或通过终止算法的执行，如果连续马尔可夫链的最后配置对于许多链是相同的（Kirkpatrick 等人 [KIR82j, Morgenstern and Shapiro [MORC86j, Sechen and Sangiovanni-Vincentelli [SEC85]  ]）。 后一个标准由 Johnson 等人改进。  [JOHN87j：他们还要求接受率小于给定值 $\chi_f$​
 
+- 马尔可夫链的长度
 
+$L_k$ 的最简单选择，即第 $k$ 个马尔可夫链的长度，是一个取决于（多项式）问题大小的值。 因此，$L_k$ 与 $k$ 无关。  Bonomi 和 Lutton [BON84j, [BON86j, [LUT86j, Burkard and Rendl] [BUR84j and Sechen and Sangiovanni-Vincentelli [SEC85j.
 
+关于马尔可夫链长度的更详细的建议基于直观的论点，即对于控制参数的每个值 $c_k$​，应该接受最小数量的转换，即 Lk 被确定为使得接受的 tllansitions 的数量至少为“'min  ("'min 一些固定数字)。 然而，随着 Ck 接近 0，转换被接受的概率降低，因此最终获得 Lk ----+ 00 for Ck 1 o。 因此，Lk 被某个常数 L（通常在问题大小中选择的多项式）限制，以避免 Cle 值低时的马尔可夫链过长。
 
+这种类型的规则是由 Kirkpatrick 等人提出的。  [KIR82j（其中 L = n，要解决的问题的变量数），Johnson 等人。  [JOHN87j（其中 L = m . R，是社区规模的倍数），Leong 等人。  [LE08Saj，[LE08Sbj 和 Morgenstern 和夏皮罗 [MORC86j。
+   纳哈尔等。  [NAH8S] 确定 Lie，使得被拒绝的跃迁数至少为固定数量。 请注意，这种方法会导致算法执行期间马尔可夫链的长度逐渐减小，这与之前描述的方法相反，并且与之前描述的方法所基于的直观论证相冲突。
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+直观上更接近准均衡概念的是 Skiscim 和 Golden [SKI83] 的选择：将一个纪元定义为具有固定接受次数的多个转换，并将一个纪元的成本定义为最后一个配置的成本值 时代。 一旦一个时期的成本与前一个时期之一的成本在指定的距离内，马尔可夫链就会终止。 因此，马尔可夫链的终止及其长度与该链观察到的成本函数值的波动有关。
+   Catthoor 等人提出了类似的建议。  [CAT8Sj，将马尔可夫链的长度与方程分母的收敛性联系起来。  3.64 和 Cerny [CER8S]，他没有量化他的提议。
 
 
 
