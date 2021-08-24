@@ -1330,99 +1330,245 @@ X0
 
 在这种情况下，MultiStart 生成了五个不同的解决方案。 这里的“不同”意味着解决方案在目标函数值或位置上相距超过 0.01。
 
+#### Iterative Display
+
+**Types of Iterative Display**
+
+迭代显示为您提供有关求解器运行过程中进度的信息。
+
+有两种类型的迭代显示：
+
+• 全局求解器显示 
+
+• 局部求解器显示
 
+这两种类型都出现在命令行中，具体取决于全局和局部选项。
 
+通过使用 optimoptions 将 problem.options 字段中的 Display 选项设置为 'iter' 或 'iter-detailed' 来获得局部求解器迭代显示。 有关详细信息，请参阅“迭代显示”。
 
+通过将 GlobalSearch 或 MultiStart 对象中的 Display 属性设置为“iter”，获得全局求解器迭代显示。
 
+全局求解器将本地求解器的默认显示选项设置为“关闭”，除非问题结构具有此选项的值。 全局求解器不会覆盖您为本地选项所做的任何设置
 
+注意 将本地求解器显示选项设置为“关闭”以外的任何选项都可以产生大量输出。  optimoptions(@solver) 创建的默认显示选项是“final”。
 
+**Examine Types of Iterative Display**
 
+使用 GlobalSearch 和 GlobalSearch 迭代显示运行第 3-13 页的“运行求解器”中描述的示例
 
+```matlab
+GlobalSearch iterative display:
+% % Set the random stream to get exactly the same output
+% rng(14,'twister')
+gs = GlobalSearch('Display','iter');
+opts = optimoptions(@fmincon,'Algorithm','interior-point');
+sixmin = @(x)(4*x(1)^2 - 2.1*x(1)^4 + x(1)^6/3 ...
++ x(1)*x(2) - 4*x(2)^2 + 4*x(2)^4);
+problem = createOptimProblem('fmincon','x0',[-1,2],...
+'objective',sixmin,'lb',[-3,-3],'ub',[3,3],...
+'options',opts);
+[xming,fming,flagg,outptg,manyminsg] = run(gs,problem);
+Num Pts Best Current Threshold Local Local
+Analyzed F-count f(x) Penalty Penalty f(x) exitflag Procedure
+0 34 -1.032 -1.032 1 Initial Point
+200 1275 -1.032 -0.2155 1 Stage 1 Local
+300 1377 -1.032 248.7 -0.2137 Stage 2 Search
+400 1477 -1.032 278 1.134 Stage 2 Search
+446 1561 -1.032 1.6 2.073 -0.2155 1 Stage 2 Local
+500 1615 -1.032 9.055 0.3214 Stage 2 Search
+600 1715 -1.032 -0.7299 -0.7686 Stage 2 Search
+700 1815 -1.032 0.3191 -0.7431 Stage 2 Search
+800 1915 -1.032 296.4 0.4577 Stage 2 Search
+900 2015 -1.032 10.68 0.5116 Stage 2 Search
+1000 2115 -1.032 -0.9207 -0.9254 Stage 2 Search
+GlobalSearch stopped because it analyzed all the trial points.
+All 3 local solver runs converged with a positive local solver exit flag
+```
 
+#### Global Output Structures
 
+全局输出结构运行可以产生两种类型的输出结构：
 
+全局输出结构。 此结构包含有关从多个起点进行的整体运行的信息。 详情如下。
 
+本地求解器输出结构。  GlobalOptimSolution 对象的向量在向量的每个元素中包含一个这样的结构。 有关此结构的说明，请参阅揙utput 结构？ 或本地求解器的函数参考页面： fmincon 输出、fminunc 输出、lsqcurvefit 输出或 lsqnonlin 输出
 
+![image-20210824183513700](C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20210824183513700.png)
 
+本地求解器的正退出标志通常表示运行成功。 负退出标志表示失败。  0 退出标志表示求解器因超出迭代或函数评估限制而停止。 有关更多信息，请参阅“退出标志和退出消息”或“容差和停止标准”。
 
+#### Visualize the Basins of Attraction
 
+哪个起点通向哪个盆地？ 对于最速下降求解器，附近的点通常通向同一个盆地； 请参阅第 1-19 页的“景点盆地”。 但是，对于 Optimization Toolbox 求解器，盆地更为复杂。
 
+绘制示例中的 MultiStart 起点，“使用 MultiStart 运行的示例”（第 3-14 页），并用它们结束的盆地进行颜色编码。
 
+```matlab
+% rng(14,'twister')
+% Uncomment the previous line to get the same output
+ms = MultiStart;
+opts = optimoptions(@fmincon,'Algorithm','interior-point');
+sixmin = @(x)(4*x(1)^2 - 2.1*x(1)^4 + x(1)^6/3 ...
++ x(1)*x(2) - 4*x(2)^2 + 4*x(2)^4);
+problem = createOptimProblem('fmincon','x0',[-1,2],...
+'objective',sixmin,'lb',[-3,-3],'ub',[3,3],...
+'options',opts);
+[xminm,fminm,flagm,outptm,manyminsm] = run(ms,problem,50);
+possColors = 'kbgcrm';
+hold on
+for i = 1:size(manyminsm,2)
+% Color of this line
+cIdx = rem(i-1, length(possColors)) + 1;
+color = possColors(cIdx);
+% Plot start points
+u = manyminsm(i).X0;
+x0ThisMin = reshape([u{:}], 2, length(u));
+plot(x0ThisMin(1, :), x0ThisMin(2, :), '.', ...
+'Color',color,'MarkerSize',25);
+% Plot the basin with color i
+plot(manyminsm(i).X(1), manyminsm(i).X(2), '*', ...
+'Color', color, 'MarkerSize',25);
+end % basin center marked with a *, start points with dots
+hold off
+```
 
+![image-20210824183613003](C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20210824183613003.png)
 
+图中用彩色 * 符号显示了盆地的中心。 与 * 符号颜色相同的起点会聚到 * 符号的中心。
 
+起点并不总是会聚到最近的盆地。 例如，红色点比红色盆地中心更靠近青色盆地中心。 此外，许多黑色和蓝色起点更靠近相对的盆地中心。洋红色和红色盆地较浅，如下面的等高线图所示。
 
+![image-20210824183643095](C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20210824183643095.png)
 
+#### Output Functions for GlobalSearch and MultiStart
 
+**What Are Output Functions?**
 
+输出函数允许您检查优化中的中间结果。 此外，它们允许您以编程方式停止求解器。
 
+有两种类型的输出函数，如第 3-23 页上的两种类型的输出结构： 
 
+• 全局输出函数在每次本地求解器运行后运行。 它们也会在全局求解器开始和结束时运行。
 
+• 局部输出函数在局部求解器的每次迭代后运行。 请参阅“Optimization Toolbox™ 的输出函数”。
 
+要使用全局输出函数： 
 
+• 使用第 11-3 页上的“OutputFcn”中描述的语法编写输出函数。
 
+• 将 GlobalSearch 或 MultiStart 求解器的 OutputFcn 属性设置为输出函数的函数句柄。 您可以通过将 OutputFcn 属性设置为函数句柄元胞数组来使用多个输出函数。
 
+**GlobalSearch Output Function**
 
+此输出函数在找到五个具有正退出标志的不同局部最小值后，或在找到小于 0.5 的局部最小值后停止 GlobalSearch。 输出函数使用持久局部变量 foundLocal 来存储局部结果。  foundLocal 使输出函数能够确定本地解决方案是否与其他解决方案不同，在 1e-4 的容差范围内。
 
+要使用嵌套函数而不是持久变量存储本地结果，请参阅“嵌套输出函数示例
 
+1 使用第 11-3 页上的“OutputFcn”中描述的语法编写输出函数。
 
+```matlab
+function stop = StopAfterFive(optimValues, state)
+persistent foundLocal
+stop = false;
+switch state
+   case 'init'
+     foundLocal = []; % initialized as empty
+   case 'iter'
+     newf = optimValues.localsolution.Fval;
+     eflag = optimValues.localsolution.Exitflag;
+% Now check if the exit flag is positive and
+% the new value differs from all others by at least 1e-4
+% If so, add the new value to the newf list
+     if eflag > 0 && all(abs(newf - foundLocal) > 1e-4)
+        foundLocal = [foundLocal;newf];
+        % Now check if the latest value added to foundLocal
+% is less than 1/2
+% Also check if there are 5 local minima in foundLocal
+% If so, then stop
+        if foundLocal(end) < 0.5 || length(foundLocal) >= 5
+           stop = true;
+     end
+  end
+end
+```
 
+2 将 StopAfterFive.m 作为文件保存在 MATLAB 路径上的文件夹中。
 
+3 编写目标函数并创建优化问题结构，如第 3-57 页上的“查找全局或多个局部最小值”中所述。
 
+```matlab
+function f = sawtoothxy(x,y)
+[t r] = cart2pol(x,y); % change to polar coordinates
+h = cos(2*t - 1/2)/2 + cos(t) + 2;
+g = (sin(r) - sin(2*r)/2 + sin(3*r)/3 - sin(4*r)/4 + 4) ...
+.*r.^2./(r+1);
+f = g.*h;
+end
+```
 
+4 将sawtoothxy.m 作为文件保存在MATLAB 路径上的文件夹中。
 
+5 在命令行中，创建问题结构：
 
+```matlab
+problem = createOptimProblem('fmincon',...
+'objective',@(x)sawtoothxy(x(1),x(2)),...
+'x0',[100,-50],'options',...
+optimoptions(@fmincon,'Algorithm','sqp'));
+```
 
+6 创建一个以@StopAfterFive 作为输出函数的GlobalSearch 对象，并将迭代显示属性设置为'iter'。
 
+```matlab
+gs = GlobalSearch('OutputFcn',@StopAfterFive,'Display','iter');
+```
 
+7 （可选）要获得与本示例相同的答案，请设置默认随机数流。
 
+8 运行问题。
 
+```matlab
+[x,fval] = run(gs,problem)
+Num Pts Best Current Threshold Local Local
+Analyzed F-count f(x) Penalty Penalty f(x) exitflag Procedure
+0 200 555.5 555.5 0 Initial Point
+200 1463 1.547e-15 1.547e-15 1 Stage 1 Local
+GlobalSearch stopped by the output or plot function.
+1 out of 2 local solver runs converged with a positive local solver exit flag.
+x =
+1.0e-07 *
+0.0414 0.1298
+fval =
+1.5467e-15
+```
 
+运行提前停止，因为 GlobalSearch 找到了一个函数值小于 0.5 的点。
 
+#### Plot Functions for GlobalSearch and MultiStart
 
+**What Are Plot Functions?**
 
+选项的PlotFcn字段指定优化函数在每次迭代时调用的一个或多个函数。Plot函数在算法执行时绘制各种进度度量。传递函数句柄或函数句柄的单元格数组。绘图函数的结构与输出函数的结构相同。有关此结构的更多信息，请参阅第113的“OutputFcn”。
 
+绘图函数是专门的输出函数（参见第3-27页的“GlobalSearch和MultiStart的输出函数”）。有两个预定义的打印函数：
 
+- @gsplotbestf 绘制最佳目标函数值。
+- @gsplotfunccount 绘制函数求值的数量。
 
+打印功能窗口具有暂停和停止按钮。默认情况下，所有打印显示在一个窗口中。
+要使用全局绘图函数：
 
+•使用第11-3页“OutputFcn”中描述的语法编写绘图函数。
 
+•将GlobalSearch或MultiStart对象的PlotFcn属性设置为plot函数的函数句柄。通过将PlotFcn特性设置为函数句柄的单元格数组，可以使用多个打印函数。
 
+**Details of Built-In Plot Functions**
 
+内置的绘图函数具有让您惊讶的特性。
 
+•@gsplotbestf可以具有不严格递减的绘图。这是因为早期值可能来自带有负退出标志（例如不可行解决方案）的本地解算器运行。具有正退出标志的后续局部解更好，即使其函数值更高。一旦局部解算器返回带有正退出标志的值，绘图将单调递减。
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+•@gsplotfunccount可能无法绘制函数求值的总数。这是因为GlobalSearch在最后一次调用plot函数后可以继续执行函数求值。有关更多信息，请参阅第3-35页的“全球搜索算法”。
 
 
 
