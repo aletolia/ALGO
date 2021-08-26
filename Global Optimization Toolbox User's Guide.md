@@ -1570,301 +1570,571 @@ fval =
 
 •@gsplotfunccount可能无法绘制函数求值的总数。这是因为GlobalSearch在最后一次调用plot函数后可以继续执行函数求值。有关更多信息，请参阅第3-35页的“全球搜索算法”。
 
+**MultiStart Plot Function**
 
+此示例绘制了为多批次获得更好的局部最小值所需的局部解算器运行次数。该示例还使用内置绘图函数显示当前最佳函数值。
 
+示例问题与第3-57页“查找全局或多个局部极小值”中的问题相同，但有额外的界限
 
+该示例使用持久变量存储以前的最佳值。plot 函数在每次局部解算器运行后检查最佳函数值，可在 optimValues 结构的 bestfva l字段中找到。如果该值不低于上一个最佳值，则plot函数会将连续调用数增加1，但没有任何改善，并绘制条形图。如果该值低于上一个最佳值，则plot函数将在图表中以值1启动一个新条形图。在打印之前，plot 函数将取连续调用数的对数。对数有助于保持绘图清晰，因为某些值可能比其他值大得多。
 
+要使用嵌套函数而不是持久变量存储本地结果，请参阅“嵌套输出函数的示例”。
 
+**Plot Function Example**
 
+本示例最小化了锯齿XY辅助功能，该功能在本示例末尾第3-0页列出。通常，将目标函数保存在MATLAB®路径上的文件中。
+此示例附带了 NumberToNext 自定义绘图函数。通常，将绘图函数保存在MATLAB路径上的文件中。这是一份清单。
 
+```matlab
+type NumberToNextBest
+function stop = NumberToNextBest(optimValues, state)
+persistent bestfv bestcounter
+stop = false;
+switch state
+case 'init'
+% Initialize variable to record best function value.
+bestfv = [];
+% Initialize counter to record number of
+% local solver runs to find next best minimum.
+bestcounter = 1;
+% Create the histogram.
+bar(log(bestcounter),'tag','NumberToNextBest');
+xlabel('Number of New Best Fval Found');
+ylabel('Log Number of Local Solver Runs');
+title('Number of Local Solver Runs to Find Lower Minimum')
+case 'iter'
+% Find the axes containing the histogram.
+NumToNext = ...
+findobj(get(gca,'Children'),'Tag','NumberToNextBest');
+% Update the counter that records number of local
+% solver runs to find next best minimum.
+if ~isequal(optimValues.bestfval, bestfv)
+bestfv = optimValues.bestfval;
+bestcounter = [bestcounter 1];
+else
+bestcounter(end) = bestcounter(end) + 1;
+end
+% Update the histogram.
+set(NumToNext,'Ydata',log(bestcounter))
+end
+```
 
+创建问题结构和全局解算器对象。设置下限[-3e3，-4e3]，上限[4e3,3e3]，并将全局解算器设置为使用 NumberNext 自定义绘图函数和gsplotbestf内置绘图函数。
 
+```matlab
+problem = createOptimProblem('fmincon',...
+'objective',@(x)sawtoothxy(x(1),x(2)),...
+'x0',[100,-50],'lb',[-3e3 -4e3],...
+'ub',[4e3,3e3],'options',...
+optimoptions(@fmincon,'Algorithm','sqp'));
+ms = MultiStart('PlotFcn',{@NumberToNextBest,@gsplotbestf});
+```
 
+运行全局解算器进行100次局部解算器运行。
 
+```matlab
+rng(2); % For reproducibility
+[x,fv] = run(ms,problem,100);
+```
 
+![image-20210826132117953](C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20210826132117953.png)
 
+**No Parallel Plot Functions**
 
+虽然MultiStart可以并行运行，但它不支持全局输出函数和并行绘图函数。此外，当多部分并行运行时，本地输出函数和绘图函数在辅助对象上运行，其效果与串行运行不同。本地输出和打印功能在Worker上运行时不会创建显示。在工作人员将其结果传递给客户端（多段并行作业的发起人）之前，您不会看到输出和打印函数的任何其他效果。
 
+有关并行运行MultiStart的信息，请参阅“并行计算”。
 
+#### How GlobalSearch and MultiStart Work
 
+**Multiple Runs of a Local Solver**
 
+GlobalSearch和MultiStart有相似的方法来寻找全局或多个极小值。这两种算法都从多个起点启动局部解算器（如fmincon）。这些算法使用多个起点对多个吸引盆地进行采样。有关更多信息，请参见第1-19页的“吸引盆地”。
 
+**Differences Between the Solver Objects**
 
+第3-34页的“GlobalSearch和多部分算法概述”包含了GlobalSearch和多部分算法的草图。
 
+![image-20210826132415249](C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20210826132415249.png)
 
+**GlobalSearch and MultiStart Algorithm Overview**
 
+GlobalSearch和MultiStart之间的主要区别是：
 
+•GlobalSearch使用分散搜索机制来生成起点。MultiStart使用边界内均匀分布的起点或用户提供的起点。
 
+•GlobalSearch分析起点，并拒绝那些不太可能改善到目前为止发现的最佳局部最小值的起点。MultiStart运行所有起始点（或者，可选地，运行关于边界或不等式约束可行的所有起始点）。
 
+•MultiStart可选择局部解算器：fmincon、fminunc、lsqcurvefit或lsqnonlin。
+GlobalSearch算法使用fmincon。
 
+•MultiStart可以并行运行，将起点分配给多个处理器，以实现本地解决方案。
+要并行运行MultiStart，请参阅第10-11页的“如何在全局优化工具箱中使用并行处理” 
 
+**Deciding Which Solver to Use**
 
+这些解算器对象之间的差异归结为以下使用决定：
 
+•使用GlobalSearch在单个处理器上最有效地查找单个全局最小值。
+•使用MultiStart：
 
+- •查找多个局部极小值。
+  •并行运行。
+  •使用除fmincon以外的解算器。
+  •彻底搜索全局最小值。
+  •探索自己的起点。
 
+**GlobalSearch Algorithm**
 
+有关该算法的描述，请参见Ugray等人[1]。
+运行GlobalSearch对象时，算法将执行以下步骤：
 
+1.第3-35页“从x0运行FMINCO”
 
+2.第3-35页“生成试验点”
 
+3.第3-36页“获得阶段1起点，运行”
 
+4.第3-36页“初始化洗手池、计数器、阈值”
 
+5.第3-36页“开始主循环”
 
+6.第3-36页“检查第2阶段试验点，查看fmincon是否运行”
 
+7.第3-37页“当fmincon运行时”
 
+8.第3-37页“当fmincon不运行时”
 
+9.第3-38页“创建全局优化解决方案”
 
+**Run fmincon from x0**
 
+GlobalSearch从您在问题结构中给出的起点开始运行fmincon。如果此运行收敛，GlobalSearch将记录吸引力盆地半径初始估计的起点和终点。此外，GlobalSearch还记录了最终目标函数值，以便在评分函数中使用（参见第3-36页的“获取阶段1起点，运行”）。
 
+分数函数是某一点的目标函数值与约束冲突总和的倍数之和。因此，可行点的得分等于其目标函数值。约束冲突的倍数最初为1000。GlobalSearch在运行期间更新倍数。
 
+**Generate Trial Points**
 
+GlobalSearch使用分散搜索算法生成一组NumTrialPoints试验点。试验点是潜在的起点。有关散射搜索算法的描述，请参见Glover[2]。GlobalSearch在您设置的任何有限边界（lb和ub）内生成试验点。无界组件具有人工边界：lb=-1e4+1，ub=1e4+1。此范围与原点不对称，因此原点不在散布搜索中。具有单侧边界的组件在无界一侧施加人工边界，通过有限边界移动以保持lb<ub。
 
+**Obtain Stage 1 Start Point, Run**
 
+GlobalSearch评估一组NumStageOnePoints试验点的得分函数。然后，它以最好的分数得分点为起点，并从该点运行fmincon。GlobalSearch从要检查的点列表中删除NumStageOnePoints测试点集。
 
+**Initialize Basins, Counters, Threshold**
 
+localSolverThreshold最初是解决方案点处两个目标函数值中的较小值。解决方案点为从x0开始和从第1阶段开始的FMINCO解决方案。如果这两个解决方案点都不存在或不可行，则localSolverThreshold最初是阶段1起点的惩罚函数值。
 
+全球研究的启发式假设是吸引盆地是球形的。x0的解点和第1阶段的解点的吸引盆的初始估计是以解点为中心的球体。每个球体的半径是从初始点到解算点的距离。这些估计盆地可能重叠。
 
+有两组计数器与算法关联。每个计数器是连续试验点的数量：
 
+•位于吸引区内。每个水池有一个计数器。
 
+•得分函数大于localSolverThreshold。有关分数的定义，请参见第3-35页的“从x0运行fmincon”。
+所有计数器最初都为0。
 
+**Begin Main Loop**
 
+GlobalSearch反复检查列表中的剩余试用点，并执行以下步骤。它会持续监视时间，并在经过的时间超过MaxTime秒时停止搜索
 
+**Examine Stage 2 Trial Point to See if fmincon Runs**
 
+把试验点叫做p。如果以下条件保持不变，则从p运行fmincon：
 
+•p不在任何现有盆地中。每个盆地 i 的标准为：
 
+```matlab
+|p - center(i)| > DistanceThresholdFactor * radius(i).
+DistanceThresholdFactor is an option (default value 0.75).
+```
 
+半径是在第3-37页的更新池半径和阈值中更新的估计半径，并对第3-38页的较大计数器值作出反应。
 
+• score(p) < localSolverThreshold.
 
+•（可选）p满足约束和/或不等式约束。如果将GlobalSearch对象的StartPointsToRun属性设置为“bounds”或“bounds ineqs”，则会发生此测试。
 
+**When fmincon Runs**
 
+**1 Reset Counters**
 
+将盆和阈值的计数器设置为0。
 
+**2 Update Solution Set**
 
+如果fmincon从p开始运行，它可以产生一个表示收敛的正退出标志。在这种情况下，GlobalSearch将更新GlobalOptimSolution对象的向量。调用解决方案点xp和目标函数值fp。有两种情况：
 
+•对于目标函数值为 fq 的其他每个解点 xq，
 
+```matlab
+|xq-xp |>XTolerance*max（1，| xp |）
+```
 
+或
 
+```matlab
+|fq - fp| > FunctionTolerance * max(1,|fp|).
+```
 
+在本例中，GlobalSearch在GlobalOptimSolution对象的向量中创建新元素。有关每个对象中包含的信息的详细信息，请参见GlobalOptimSolution
 
+•对于目标函数值为 fq 的其他解点 xq，
 
+```matlab
+|xq - xp| <= XTolerance * max(1,|xp|)
+```
 
+同时
 
+```matlab
+|fq - fp| <= FunctionTolerance * max(1,|fp|).
+```
 
+在这种情况下，GlobalSearch认为xp等同于xq。GlobalSearch算法通过向X0点的单元阵列添加p来修改xq的全局最优解。
 
+有一个小的调整，可以发生在这个更新。如果xq的退出标志大于1，而xp的退出标志为1，则xp将替换xq。这种替换可能导致同一盆中的某些点与xp的距离超过X公差。
 
+**3 Update Basin Radius and Threshold**
 
+如果当前fmincon运行的退出标志为正：
 
+将阈值设置为起点p处的得分值。
 
+b将xp的水池半径设置为现有半径（如有）的最大值以及p和xp之间的距离 
 
+**4 Report to Iterative Display**
 
+当GlobalSearch显示属性为“iter”时，fmincon运行的每个点都会在GlobalSearch迭代显示中创建一条线。
 
+**When fmincon Does Not Run**
 
+**1 Update Counters**
 
+为每个含有p的盆增加计数器。将每隔一个盆的计数器重置为0。
 
+如果分数（p）>=localSolverThreshold，则增加阈值计数器。否则，将计数器重置为0。
 
+**2 React to Large Counter Values**
 
+对于计数器等于MaxWaitCycle的每个盆地，将盆地半径乘以1–BasinRadiusFactor。将计数器重置为0。（MaxWaitCycle和BasinRadiusFactor都是GlobalSearch对象的可设置属性。）如果阈值计数器等于MaxWaitCycle，则增加阈值：新阈值=阈值+惩罚thresholdFactor*（1+abs（阈值））。
+将计数器重置为0。
 
+**3 Report to Iterative Display**
 
+每200个试验点在GlobalSearch迭代显示中创建一条线。
 
+**Create GlobalOptimSolution**
 
+达到MaxTime秒或试用点不足后，GlobalSearch将创建GlobalOptimSolution对象的向量。GlobalSearch按目标函数值对向量进行排序，从最低（最佳）到最高（最差）。算法到此结束。
 
+#### Can You Certify That a Solution Is Global?
 
+**No Guarantees**
 
+你如何判断你是否找到了目标函数的全局最小值？简而言之，你不能；您不能保证全局优化工具箱解算器的结果是全局最优的。虽然所有全局优化工具箱解算器都会反复尝试定位全局解，但没有一个解算器使用能够证明解为全局解的算法。
 
+但是，您可以使用本节中的策略来调查解决方案。
 
+**Check if a Solution Is a Local Solution with patternsearch**
 
+在确定声称的解决方案是否为全局最小值之前，首先检查它是否为局部最小值。为此，请对问题运行patternsearch。
 
+要将问题转换为使用patternsearch而不是fmincon或fminunc，请输入
 
+```matlab
+problem.solver = 'patternsearch';
+```
 
+另外，将起点更改为刚找到的解决方案，并清除选项：
 
+```matlab
+problem.x0 = x;
+problem.options = [];
+```
 
+例如，检查附近的点显示以下内容：
 
+```matlab
+options = optimoptions(@fmincon,'Algorithm','active-set');
+ffun = @(x)(x(1)-(x(1)-x(2))^2);
+problem = createOptimProblem('fmincon', ...
+'objective',ffun,'x0',[1/2 1/3], ...
+'lb',[0 -1],'ub',[1 1],'options',options);
+[x,fval,exitflag] = fmincon(problem)
+x =
+1.0e-007 *
+0 0.1614
+fval =
+-2.6059e-016
+exitflag =
+1
+```
 
+然而，用patternsearch检查这个声称的解决方案表明有更好的解决方案。从报告的解决方案x启动patternsearch：
 
+```matlab
+% set the candidate solution x as the start point
+problem.x0 = x;
+problem.solver = 'patternsearch';
+problem.options = [];
+[xp,fvalp,exitflagp] = patternsearch(problem)
+Optimization terminated: mesh size less than options.MeshTolerance.
+xp =
+1.0000 -1.0000
+fvalp =
+-3.0000
+exitflagp =
+1
+```
 
+**Identify a Bounded Region That Contains a Global Solution**
 
+假设在有界区域中有一个平滑的目标函数。如果有足够的时间和起点，MultiStart最终会找到一个全局解决方案。
 
+因此，如果可以将全局解决方案所在的区域绑定，则可以在一定程度上确保MultiStart定位全局解决方案。
 
+例如，考虑函数
 
+<img src="C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20210826140705740.png" alt="image-20210826140705740" style="zoom:67%;" />
 
+初始求和 $x^6+y^6$​ 强制函数变大，并且对于 $| x | $​ 或 $| y |$ 的大值为正。函数的全局最小值的分量必须在边界内
 
+$$
+-10\le x,y\le10
+$$
+因为 $10^6$ 比函数的其他求和中出现的所有 $10^4$ 的倍数都大。
 
+您可以为这个问题确定较小的界限；例如，全局最小值介于–2 和2之间。确定合理界限比确定最佳界限更重要
 
+**Use MultiStart with More Start Points**
 
+要检查您的问题是否有更好的解决方案，请使用其他起点运行MultiStart。对于此任务，请使用MultiStart而不是GlobalSearch，因为GlobalSearch不会从所有起点运行本地解算器。
 
+例如，请参见第3-46页的“示例：搜索更好的解决方案”。
 
+#### **Refine Start Points**
 
+**About Refining Start Points**
 
+如果问题的某些部分不受约束，GlobalSearch和MultiStart将使用人工边界在每个部分中均匀生成随机起点。然而，如果你的问题有很遥远的极小值，你需要广泛分散的起点来找到这些极小值。
 
+使用这些方法获得广泛分散的起点：
 
+•在问题结构中给出广泛分离的界限。
+•将RandomStartPointSet对象与MultiStart算法一起使用。在RandomStartPointSet对象中设置ArtificialBound属性的较大值。
+•将CustomStartPointSet对象与MultiStart算法一起使用。使用广泛分散的起点。
+每种方法都有优点和缺点。
 
+![image-20210826141354984](C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20210826141354984.png)
 
+**Methods of Generating Start Points**
 
+**Uniform Grid**
 
+生成起点的统一网格的步骤
 
+1使用ndgrid生成多维数组。给出每个组件的下限、间距和上限。
+例如，要生成一组三维阵列，第一个分量从-2到0，间距0.5
 
+•第二个分量从0到2，间距0.25
 
+•第三个分量从-10到5，间距1
 
+```matlab
+[X,Y,Z] = ndgrid(-2:.5:0,0:.25:2,-10:5);
+```
 
+2将数组放入一个矩阵中，每行代表一个起点。例如：
 
+```matlab
+W = [X(:),Y(:),Z(:)];
+```
 
+在本例中，W是一个720×3的矩阵。
 
+3将矩阵放入CustomStartPointSet对象中。例如：
 
+```matlab
+custpts = CustomStartPointSet(W);
+```
 
+使用CustomStartPointSet对象作为第三个输入调用run。例如
 
+```matlab
+% Assume problem structure and ms MultiStart object exist
+[x,fval,flag,outpt,manymins] = run(ms,problem,custpts);
+```
 
+**Perturbed Grid**
 
+整数起始点可以产生比轻微扰动的起始点更不稳定的解。
 
+要获得一组扰动的起点，请执行以下操作： 
 
+1按照第3-44页“统一网格”的步骤1-2生成起点矩阵。
 
+2通过添加平均值为0且方差相对较小的随机正态矩阵来扰动起点。对于第3-44页“均匀网格”中的示例，在制作W矩阵后，添加扰动： 
 
+```matlab
+[X,Y,Z] = ndgrid(-2:.5:0,0:.25:2,-10:5);
+W = [X(:),Y(:),Z(:)];
+W = W + 0.01*randn(size(W));
+```
 
+3将矩阵放入CustomStartPointSet对象中。例如：
 
+```matlab
+custpts = CustomStartPointSet(W);
+```
 
+使用CustomStartPointSet对象作为第三个输入调用run。例如
 
+```matlab
+% Assume problem structure and ms MultiStart object exist
+[x,fval,flag,outpt,manymins] = run(ms,problem,custpts);
+```
 
+**Widely Dispersed Points for Unconstrained Components**
 
+问题的某些部分可能缺少上限或下限。例如：
 
+•尽管不存在明确的界限，但存在组件无法达到的级别。例如，如果一个组分表示单个钻石的重量，则存在1 kg的隐含上限（希望钻石低于10 g）。在这种情况下，将隐式边界作为上界。
 
+•确实没有上限。例如，以字节为单位的计算机文件大小没有有效的上限。今天最大的容量可以是千兆字节或兆字节，但10年后，谁知道呢？
 
+对于真正的无界组件，可以使用以下采样方法。要在每个区域$(\exp (n),\exp (n+1))$中生成大约 $1/n$ 个点，请使用以下公式。如果u在0到1之间是随机且均匀分布的，那么 $r=2u–1$ 在–1和1之间均匀分布。取
 
+```matlab
+y = sgn(r) exp 1/ r − e .
+```
 
+y 是对称的和随机的。对于以 lb 为界的变量，取
 
+```matlab
+y = lb + exp 1/u − e .
+```
 
+类似地，对于上面以 ub 为界的变量，取
 
+```matlab
+y = ub − exp 1/u − e .
+```
 
+例如，假设您有一个三维问题
 
+•x（1）>0
 
+•x（2）<100
 
+•x（3）无约束
 
+要使150个起点满足这些约束条件，请执行以下操作：
 
+```matlab
+u = rand(150,3);
+r1 = 1./u(:,1);
+r1 = exp(r1) - exp(1);
+r2 = 1./u(:,2);
+r2 = -exp(r2) + exp(1) + 100;
+r3 = 1./(2*u(:,3)-1);
+r3 = sign(r3).*(exp(abs(r3)) - exp(1));
+custpts = CustomStartPointSet([r1,r2,r3]);
+```
 
+以下是此算法的一个变体。使用下限方法生成一个介于0和无穷大之间的数字。使用此数字作为点的半径。通过为每个组件取随机数并乘以半径，生成点的其他组件。在乘以半径之前，可以对随机数进行归一化，使其范数为1。有关此方法的工作示例，请参阅第3-88页的“多段无边界、广泛分散的起点”
 
+**Example: Searching for a Better Solution**
 
+MultiStart未能在第3-59页的“通过MultiStart找到多个局部极小值”中找到全局极小值。有两种简单的方法可以搜索更好的解决方案：
 
+•使用更多的起点
 
+•在搜索空间上给出更严格的界限设置问题结构和MultiStart对象：
 
+```matlab
+problem = createOptimProblem('fminunc',...
+'objective',@(x)sawtoothxy(x(1),x(2)),...
+'x0',[100,-50],'options',...
+optimoptions(@fminunc,'Algorithm','quasi-newton'));
+ms = MultiStart
+```
 
+**Use More Start Points**
 
+Run MultiStart on the problem for 200 start points instead of 50:
 
+```matlab
+rng(14,'twister') % for reproducibility
+[x,fval,eflag,output,manymins] = run(ms,problem,200)
+MultiStart completed some of the runs from the start points.
+53 out of 200 local solver runs converged with a positive local solver exit flag.
+x =
+1.0e-06 *
+-0.2284 -0.5567
+fval =
+2.1382e-12
+eflag =
+2
+output =
+struct with fields:
+funcCount: 32670
+localSolverTotal: 200
+localSolverSuccess: 53
+localSolverIncomplete: 147
+localSolverNoSolution: 0
+message: 'MultiStart completed some of the runs from the start points.↵↵53 out manymins =
+1x53 GlobalOptimSolution
+Properties:
+X
+Fval
+Exitflag
+Output
+X0
+This time MultiStart found the global minimum, and found 51 local minima.
+To see the range of local solutions, enter histogram([manymins.Fval],10).
+```
 
+![image-20210826143852903](C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20210826143852903.png)
 
+**Tighter Bound on the Start Points**
 
+假设您认为感兴趣的局部解决方案的所有组件的绝对值都小于100。起始点上边界的默认值为1000。若要使用不同的边界值，请生成一个RandomStartPointSet，并将ArtificialBound属性设置为100：
 
+```matlab
+startpts = RandomStartPointSet('ArtificialBound',100,...
+'NumStartPoints',50);
+[x,fval,eflag,output,manymins] = run(ms,problem,startpts)
+MultiStart completed some of the runs from the start points.
+29 out of 50 local solver runs converged with a positive local solver exit flag.
+x =
+1.0e-08 *
+0.9725 -0.6198
+fval =
+1.4955e-15
+eflag =
+output =
+struct with fields:
+funcCount: 7431
+localSolverTotal: 50
+localSolverSuccess: 29
+localSolverIncomplete: 21
+localSolverNoSolution: 0
+message: 'MultiStart completed some of the runs from the start points.↵↵29 out manymins =
+1x25 GlobalOptimSolution
+Properties:
+X
+Fval
+Exitflag
+Output
+X0
+MultiStart found the global minimum, and found 22 distinct local solutions. To see the range of
+local solutions, enter histogram([manymins.Fval],10).
+```
 
+![image-20210826144031349](C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20210826144031349.png)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+与第3-47页“使用更多起点”中的最小值相比，本次运行的最小值更好（更小），成功运行的百分比更高。
 
 
 
